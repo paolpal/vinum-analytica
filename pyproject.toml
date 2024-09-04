@@ -1,0 +1,11 @@
+[project]
+name = "vinum_analytica"
+version = "0.1.0"
+dependencies = [
+    "numpy",
+    "matplotlib",
+    "scipy",
+    "networkx",
+]
+[tool.setuptools]
+package-dir = {"vinum_analytica" = "src"}
