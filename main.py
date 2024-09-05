@@ -1,6 +1,3 @@
-import sys
-import time
-
 from vinum_analytica.data.dataset import WineDatasetManager # type: ignore
 from vinum_analytica.models.tree_model import TreeModel # type: ignore
 from vinum_analytica.models.forest_model import RandomForestModel # type: ignore
