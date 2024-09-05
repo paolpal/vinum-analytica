@@ -1,4 +1,6 @@
 import itertools
+import json
+import random
 from vinum_analytica.data.dataset import WineDatasetManager  # type: ignore
 from vinum_analytica.models.nn_model import NeuralNetworkModel  # type: ignore
 
@@ -20,8 +22,13 @@ param_combinations = list(itertools.product(*param_values))
 dataset = WineDatasetManager()
 dataset.load('./data/processed/train.csv')
 
-# Definisci il numero di fold per il KFold
-n_folds = 6
+# Campiona 8 combinazioni di iperparametri casuali
+param_combinations = random.sample(param_combinations, 8)
+
+results = []
+# salva gli iper parametri selezionati su un file
+with open('./results/hyper_nn.json', 'w') as f:
+    json.dump(param_combinations, f, indent=4)
 
 # Ciclo sulle combinazioni degli iperparametri
 for combination in param_combinations:
@@ -29,7 +36,9 @@ for combination in param_combinations:
     params = dict(zip(param_keys, combination))
 
     # Ciclo sui fold
-    for fold in range(n_folds):
+    accuracies = []
+    print(f'Training model with hyperparameters: {params}')
+    for fold in range(n_folds := 6):
         # Suddividi il dataset in training e validation per questo fold
         train, valid = dataset.fold(fold, n_folds=n_folds)
         vec = train.vectorize()
@@ -46,11 +55,17 @@ for combination in param_combinations:
         )
 
         # Addestra il modello per il numero di epoche specificato
-        nn.train(train)
+        nn.train(train, verbose=False)
 
         # Valuta il modello sui dati di validazione
         accuracy = nn.evaluate(valid)
-        print(f'Combinazione: {params}, Fold {fold}, Accuracy: {accuracy}')
-
-        # Salva il modello addestrato
-        nn.save(f'./models/nn_model_comb_{combination}_fold_{fold}.pkl')
+        accuracies.append(accuracy)
+    
+    # crea un json con i parametri e l'accuratezza
+    result = {
+        'hyperparams': params,
+        'accuracies': accuracies
+    }
+    results.append(result)
+    with open('./results/nn_tuning.json', 'w') as f:
+        json.dump(results, f, indent=4)

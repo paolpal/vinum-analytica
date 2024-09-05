@@ -99,7 +99,7 @@ class WineDatasetManager:
         preprocessor = TextPreprocessor()
         self.X = self.X.apply(preprocessor.preprocess)
     
-    def vectorize(self, vectorizer: TfidfVectorizer = None) -> TfidfVectorizer:
+    def vectorize(self, vectorizer: TfidfVectorizer | None = None) -> TfidfVectorizer:
         """
         Vettorizza le descrizioni dei vini e aggiorna X con i dati vettorizzati.
         """

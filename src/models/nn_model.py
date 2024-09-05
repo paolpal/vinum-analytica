@@ -62,9 +62,11 @@ class NeuralNetworkModel(Model):
         # Convertiamo i dati di training in formato sparso di SciPy
         X_train_sparse = train.get_x()
 
+        disable_tqdm = kwargs.get('verbose', True) == False
+
         for epoch in range(epochs := self.hyperparameters['epochs']):
             permutation = np.random.permutation(X_train_sparse.shape[0])
-            for i in tqdm(range(0, X_train_sparse.shape[0], batch_size), desc=f'Epoch {epoch+1}/{epochs}'):
+            for i in tqdm(range(0, X_train_sparse.shape[0], batch_size), desc=f'Epoch {epoch+1}/{epochs}', disable=disable_tqdm):
                 max_index = min(i + batch_size, X_train_sparse.shape[0])
                 indices = permutation[i:max_index]
                 batch_x_sparse = X_train_sparse[indices]
