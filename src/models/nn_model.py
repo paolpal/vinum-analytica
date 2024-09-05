@@ -104,6 +104,7 @@ class NeuralNetworkModel(Model):
             inputs_dense = torch.tensor(inputs_sparse.toarray(), dtype=torch.float32, device=self.device)  # Convertiamo in denso
             outputs = self.model(inputs_dense)
             _, predicted = torch.max(outputs.data, 1)  # Prendiamo la classe con la probabilità più alta
+            predicted = predicted.cpu()
         return self.label_encoder.inverse_transform(predicted.numpy())
 
     def reset(self):
