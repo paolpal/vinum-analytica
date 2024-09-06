@@ -72,8 +72,6 @@ class WineDatasetManager:
         self.X = df['description']
         self.y = df['variety']
 
-
-
     def get_x(self) -> pd.Series:
         """
         Restituisce le caratteristiche (descrizioni dei vini).
@@ -107,7 +105,7 @@ class WineDatasetManager:
             self.vectorizer = vectorizer
             self.X = self.vectorizer.transform(self.X)
         else:
-            self.vectorizer = TfidfVectorizer()
+            self.vectorizer = TfidfVectorizer(strip_accents='ascii')
             self.X = self.vectorizer.fit_transform(self.X)
         return self.vectorizer
 
@@ -124,6 +122,12 @@ class WineDatasetManager:
         X_res, y_res = smote.fit_resample(self.X, self.y)
 
         self.X, self.y = X_res, y_res
+
+    def reset_folds(self):
+        """
+        Resetta gli indici dei fold.
+        """
+        self.folds = None
 
     def fold(self, fold_idx: int, n_folds: int = 5) -> tuple['WineDatasetManager', 'WineDatasetManager']:
         """

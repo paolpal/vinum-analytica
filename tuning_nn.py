@@ -6,7 +6,7 @@ from vinum_analytica.models.nn_model import NeuralNetworkModel  # type: ignore
 
 # Definizione della griglia di iperparametri per la rete neurale
 nn_param_grid = {
-    'hidden_size': [32, 64, 128],  # Dimensioni del livello nascosto
+    'hidden_size': [32, 64, 128, 128],  # Dimensioni del livello nascosto
     'epochs': [5, 10, 15],         # Numero di epoche
     'lr': [0.001, 0.01, 0.1]       # Learning rate
 }
@@ -26,9 +26,12 @@ dataset.load('./data/processed/train.csv')
 param_combinations = random.sample(param_combinations, 8)
 
 results = []
+printable_combinations = []
+for combination in param_combinations:
+    printable_combinations.append(dict(zip(param_keys, combination)))
 # salva gli iper parametri selezionati su un file
 with open('./results/hyper_nn.json', 'w') as f:
-    json.dump(param_combinations, f, indent=4)
+    json.dump(printable_combinations, f, indent=4)
 
 # Ciclo sulle combinazioni degli iperparametri
 for combination in param_combinations:
@@ -38,6 +41,7 @@ for combination in param_combinations:
     # Ciclo sui fold
     accuracies = []
     print(f'Training model with hyperparameters: {params}')
+    dataset.reset_folds()
     for fold in range(n_folds := 6):
         # Suddividi il dataset in training e validation per questo fold
         train, valid = dataset.fold(fold, n_folds=n_folds)

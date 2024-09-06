@@ -3,7 +3,8 @@ import string
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
-from scipy.sparse import spmatrix
+from nltk.stem import SnowballStemmer
+from unidecode import unidecode
 
 # Assicurati di avere le risorse necessarie di NLTK
 nltk.download('stopwords', quiet=True)
@@ -13,13 +14,14 @@ nltk.download('punkt', quiet=True)
 class TextPreprocessor:
     def __init__(self):
         self.stop_words = set(stopwords.words('english'))
-        self.stemmer = PorterStemmer()
+        self.stemmer = SnowballStemmer('english')
         self.punctuation_pattern = re.compile(f'[{re.escape(string.punctuation)}]')
 
     def _clean_text(self, text: str) -> str:
+        text = unidecode(text)
         text = self.punctuation_pattern.sub('', text)
         text = text.lower()
-        text = re.sub(r'\d+', '', text)
+        text = re.sub(r'[0-9]', '', text) # Rimuovi i numeri
         return text
 
     def _remove_stopwords(self, text: str) -> str:
