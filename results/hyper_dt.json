@@ -1,0 +1,42 @@
+[
+    {
+        "criterion": "log_loss",
+        "min_impurity_decrease": 0.0,
+        "max_depth": 1000
+    },
+    {
+        "criterion": "entropy",
+        "min_impurity_decrease": 1e-12,
+        "max_depth": 1000
+    },
+    {
+        "criterion": "gini",
+        "min_impurity_decrease": 0.0001,
+        "max_depth": 1000
+    },
+    {
+        "criterion": "entropy",
+        "min_impurity_decrease": 0.0001,
+        "max_depth": null
+    },
+    {
+        "criterion": "entropy",
+        "min_impurity_decrease": 1e-12,
+        "max_depth": null
+    },
+    {
+        "criterion": "log_loss",
+        "min_impurity_decrease": 0.0001,
+        "max_depth": null
+    },
+    {
+        "criterion": "gini",
+        "min_impurity_decrease": 1e-08,
+        "max_depth": 1000
+    },
+    {
+        "criterion": "entropy",
+        "min_impurity_decrease": 1e-08,
+        "max_depth": 1000
+    }
+]

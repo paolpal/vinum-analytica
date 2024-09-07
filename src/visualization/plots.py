@@ -77,4 +77,34 @@ class Plotter:
         plt.title('Difference in Wine Variety Counts Between Two Datasets')
         plt.show()
 
+    def plot_model_accuracy_comparison(self, model_data, index_to_hyperparams, title='Model Accuracy Comparison'):
+        """
+        Crea e mostra un grafico a violino delle distribuzioni di accuratezza per ciascun modello.
+        
+        Parameters:
+            model_data (list): Lista di dizionari contenenti i dati dei modelli.
+            index_to_hyperparams (dict): Mappa degli indici ai rispettivi iperparametri.
+        """
+        model_labels = []
+        accuracies = []
+
+        for i, d in enumerate(model_data):
+            index_label = f"Index {i}"
+            model_labels.extend([index_label] * len(d['accuracies']))
+            accuracies.extend(d['accuracies'])
+
+        plt.figure(figsize=(12, 8))
+        sns.violinplot(x=model_labels, y=accuracies, inner="quartile", color='steelblue')
+
+        plt.xlabel('Hyperparameters')
+        plt.ylabel('Accuracy')
+        plt.title(title)
+        plt.xticks(rotation=45)
+        plt.show()
+
+        # Print the table of hyperparameters
+        print("\nHyperparameters Table:")
+        for i, hyperparams in index_to_hyperparams.items():
+            print(f"Index {i}: {hyperparams}")
+
 
