@@ -7,9 +7,10 @@ from vinum_analytica.models.forest_model import RandomForestModel  # type: ignor
 
 # Definizione della griglia di iperparametri per la rete neurale
 rf_param_grid = {
-    'n_estimators': [50, 100, 150],                     # Numero di alberi nella foresta
-    'criterion': ['gini', 'entropy'],                   # Funzione di qualità da ottimizzare
-    'min_impurity_decrease': [0.0, 1e-2, 1e-4, 1e-8]    # Soglia per la riduzione dell'impurità
+    'n_estimators': [50, 100, 150],                                 # Numero di alberi nella foresta
+    'criterion': ['gini', 'entropy', 'log_loss'],                   # Funzione di qualità da ottimizzare
+    'min_impurity_decrease': [0.0, 1e-4, 1e-8, 1e-12],              # Soglia per la riduzione dell'impurità
+    'max_depth': [None, 1000]                                       # Profondità massima dell'albero
 }
 
 # Ottieni le chiavi e i valori degli iperparametri
@@ -54,7 +55,8 @@ for combination in param_combinations:
             vectorizer=vec,
             criterion=params['criterion'],
             min_impurity_decrease=params['min_impurity_decrease'],
-            n_estimators=params['n_estimators']
+            n_estimators=params['n_estimators'],
+            max_depth=params['max_depth']
         )
 
         # Addestra il modello per il numero di epoche specificato

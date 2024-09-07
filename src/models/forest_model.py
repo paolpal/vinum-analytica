@@ -3,7 +3,7 @@ from .model import Model
 import pickle
 
 class RandomForestModel(Model):
-    def __init__(self, vectorizer = None, n_estimators: int = 100, criterion='gini', min_impurity_decrease: float = 0.0):
+    def __init__(self, vectorizer = None, n_estimators: int = 100, criterion='gini', min_impurity_decrease: float = 0.0, max_depth=None):
         """
         Inizializza il modello RandomForestClassifier con i parametri specificati.
         
@@ -11,13 +11,14 @@ class RandomForestModel(Model):
             n_estimators (int): Il numero di alberi nella foresta (default 100).
             max_depth (int): La profondità massima degli alberi (default None).
         """
-        self.model = RandomForestClassifier(n_estimators=n_estimators, min_impurity_decrease=min_impurity_decrease, criterion=criterion, n_jobs=-1)
+        self.model = RandomForestClassifier(n_estimators=n_estimators, min_impurity_decrease=min_impurity_decrease, criterion=criterion, max_depth=max_depth, n_jobs=-1)
         self.model.set_params(class_weight='balanced')
         self.vectorizer = vectorizer
         self.hyperparameters = {
             'n_estimators': n_estimators,
             'criterion': criterion,
-            'min_impurity_decrease': min_impurity_decrease
+            'min_impurity_decrease': min_impurity_decrease,
+            'max_depth': max_depth
         }
 
     def train(self, train, **kwargs):

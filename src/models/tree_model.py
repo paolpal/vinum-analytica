@@ -3,13 +3,14 @@ from .model import Model
 import pickle
 
 class TreeModel(Model):
-    def __init__(self, vectorizer = None, criterion='gini', min_impurity_decrease=0.0):
-        self.model = DecisionTreeClassifier(criterion=criterion, min_impurity_decrease=min_impurity_decrease)
+    def __init__(self, vectorizer = None, criterion='gini', min_impurity_decrease=0.0, max_depth=None):
+        self.model = DecisionTreeClassifier(criterion=criterion, min_impurity_decrease=min_impurity_decrease, max_depth=max_depth)
         self.model.set_params(class_weight='balanced')
         self.vectorizer = vectorizer
         self.hyperparameters = {
             'criterion': criterion,
-            'min_impurity_decrease': min_impurity_decrease
+            'min_impurity_decrease': min_impurity_decrease,
+            'max_depth': max_depth
         }
 
     def train(self, train, **kwargs):

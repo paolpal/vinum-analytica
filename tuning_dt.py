@@ -7,8 +7,9 @@ from vinum_analytica.models.tree_model import TreeModel  # type: ignore
 
 # Definizione della griglia di iperparametri per la rete neurale
 dt_param_grid = {
-    'criterion': ['gini', 'entropy'],                   # Funzione di qualità da ottimizzare
-    'min_impurity_decrease': [0.0, 1e-2, 1e-4, 1e-8]    # Soglia per la riduzione dell'impurità
+    'criterion': ['gini', 'entropy', 'log_loss'],                   # Funzione di qualità da ottimizzare
+    'min_impurity_decrease': [0.0, 1e-4, 1e-8, 1e-12],              # Soglia per la riduzione dell'impurità
+    'max_depth': [None, 1000]                                       # Profondità massima dell'albero
 }
 
 # Ottieni le chiavi e i valori degli iperparametri
@@ -23,7 +24,7 @@ dataset = WineDatasetManager()
 dataset.load('./data/processed/train.csv')
 
 # Campiona 8 combinazioni di iperparametri casuali
-# param_combinations = random.sample(param_combinations, 8)
+param_combinations = random.sample(param_combinations, 8)
 
 results = []
 printable_combinations = []
@@ -52,7 +53,8 @@ for combination in param_combinations:
         dt = TreeModel(
             vectorizer=vec,
             criterion=params['criterion'],
-            min_impurity_decrease=params['min_impurity_decrease']
+            min_impurity_decrease=params['min_impurity_decrease'],
+            max_depth=params['max_depth']
         )
 
         # Addestra il modello per il numero di epoche specificato
