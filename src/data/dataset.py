@@ -35,17 +35,6 @@ class WineDatasetManager:
             WineDatasetManager: Un'istanza di WineDatasetManager con i dati caricati.
         """
         df = pd.read_csv(csv_path)
-
-        df = df[~df['variety'].str.contains('Blend', case=False, na=False)]  # Rimuovere i blend
-        variety_counts = df['variety'].value_counts()
-
-        support_threshold = 0.006*len(df)  # Set the support threshold as desired
-
-        selected_varieties = variety_counts[variety_counts >= support_threshold]
-
-        filtered_df = df[df['variety'].isin(selected_varieties.index)]
-        df = filtered_df
-
         X = df[text_column]
         y = df[label_column]
         return cls(X, y)

@@ -10,39 +10,52 @@ from sklearn.metrics import confusion_matrix
 # Preprocessa il dataset
 #dataset.preprocess()
 
+print('Loading dataset...', end='')
 dataset = WineDatasetManager()
 dataset.load('./data/processed/train.csv')
-
+print('done')
 
 train, valid = dataset.split()
 vec = train.vectorize()
+
+print('Oversampling dataset...', end='')
 train.oversample()
+print('done')
 
 # Inizializza il modello
-#forest = RandomForestModel()
-nn = NeuralNetworkModel(
+#forest = RandomForestModel(vectorizer=vec)
+"""nn = NeuralNetworkModel(
         input_size=vec.get_feature_names_out().shape[0], 
-        output_size=len(train.classes()), 
+        output_size=len(train.classes()),
+        epochs=1,
         vectorizer=vec
     )
+"""
+tree = TreeModel(vectorizer=vec)
 
 # Addestra il modello
+print('Training model...', end='')
 #forest.train(train)
-#forest.load('./models/forest_model_f.pkl')
-
-nn.train(train)
+tree.train(train)
+#nn.train(train)
+print('done')
 
 # Valuta il modello
+print('Evaluating model...', end='')
+accuracy = tree.evaluate(valid)
 #accuracy = forest.evaluate(valid)
-accuracy = nn.evaluate(valid)
+#accuracy = nn.evaluate(valid)
+print('done')
 print(f'Accuracy: {accuracy}')
 
 #forest.save('./models/forest_model_f.pkl')
-nn.save('./models/nn_model.pkl')
+#nn.save('./models/nn_model.pkl')
 
+print('Computing confusion matrix...', end='')
+cm = tree.evaluate(valid, metric=confusion_matrix, normalize='true')
 #cm = forest.evaluate(valid, metric=confusion_matrix, normalize='true')
-cm = nn.evaluate(valid, metric=confusion_matrix, normalize='true')
-
+#cm = nn.evaluate(valid, metric=confusion_matrix, normalize='true')
+print('done')
 plotter = Plotter()
 
-plotter.plot_confusion_matrix(cm, classes=nn.classes())
+plotter.plot_confusion_matrix(cm, classes=tree.classes())
