@@ -57,7 +57,7 @@ class RegressorNeuralNetworkModel(Model):
         self.model.train()
 
         y_train = train.get_y().values
-        y_train = torch.tensor(y_train, dtype=torch.float32, device=self.device)
+        y_train = torch.tensor(y_train, dtype=torch.float32, device=self.device).unsqueeze(1)
         X_train_sparse = train.get_x()
 
         disable_tqdm = kwargs.get('verbose', True) == False
