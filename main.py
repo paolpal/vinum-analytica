@@ -1,5 +1,5 @@
 from vinum_analytica.data import WineDatasetManager # type: ignore
-from vinum_analytica.models import TreeModel, RandomForestModel, NeuralNetworkModel, RegressorTreeModel# type: ignore
+from vinum_analytica.models import TreeModel, RandomForestModel, NeuralNetworkModel, RegressorTreeModel, RegressorNeuralNetworkModel # type: ignore
 from vinum_analytica.visualization import Plotter # type: ignore
 
 from sklearn.metrics import mean_squared_error, r2_score
@@ -33,12 +33,17 @@ vec = train.vectorize()
     )
 """
 #tree = TreeModel(vectorizer=vec)
-tree = RegressorTreeModel(vectorizer=vec)
+#tree = RegressorTreeModel(vectorizer=vec)
+model = RegressorNeuralNetworkModel(
+    input_size=vec.get_feature_names_out().shape[0],
+    epochs=5,
+    lr=0.001
+)
 
 # Addestra il modello
 print('Training model...', end='')
 #forest.train(train)
-tree.train(train)
+model.train(train)
 #nn.train(train)
 print('done')
 
@@ -52,7 +57,7 @@ print('done')
 
 #forest.save('./models/forest_model_f.pkl')
 #nn.save('./models/nn_model.pkl'
-tree.save('./models/regressor_tree_model.pkl')
+model.save('./models/regressor_neural_network_model.pkl')
 
 #print('Computing confusion matrix...', end='')
 #cm = tree.evaluate(valid, metric=confusion_matrix, normalize='true')
