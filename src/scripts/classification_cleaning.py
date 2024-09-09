@@ -4,7 +4,7 @@ from unidecode import unidecode
 import re
 # Caricare il dataset
 data_path = './data/raw/winemag-data-130k-v2.csv'  # Modificare il percorso se necessario
-df = pd.read_csv(data_path)
+df = pd.read_csv(data_path, index_col=0)
 
 df = df[~df['variety'].str.contains('Blend', case=False, na=False)]  # Rimuovere i blend
 variety_counts = df['variety'].value_counts()
@@ -58,5 +58,5 @@ print(f'Varieties with contamination: {contaminated_varieties}')
 df = df.drop(columns=['variety_contamination'])
 
 # Salvare il dataset pulito
-clean_data_path = './data/processed/clean_data.csv'  # Modificare il percorso se necessario
+clean_data_path = './data/raw/clean_data.csv'  # Modificare il percorso se necessario
 df.to_csv(clean_data_path, index=False)

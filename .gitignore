@@ -108,3 +108,12 @@ logs/
 
 # Ignore dataset files
 *.csv
+
+# Ignore image files
+*.jpg
+*.jpeg
+*.png
+
+# ignore JSON
+*.json
+

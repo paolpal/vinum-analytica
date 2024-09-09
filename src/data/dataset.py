@@ -8,36 +8,40 @@ from scipy.sparse import csr_matrix
 from .data_preprocessing import TextPreprocessor
 
 class WineDatasetManager:
-    def __init__(self, X: pd.Series = None, y: pd.Series = None):
+    def __init__(self, X: pd.Series = None, y: pd.Series = None, x_label: str = 'description', y_label: str = 'variety'):
         """
-        Inizializza la classe con i dati opzionali X e y.
+        Inizializza la classe con i dati opzionali X, y, x_label, e y_label.
         
         Parameters:
-            X (pd.Series): Serie contenente le caratteristiche (descrizioni) dei vini.
-            y (pd.Series): Serie contenente le etichette (varietà) dei vini.
+            X (pd.Series): Serie contenente le caratteristiche.
+            y (pd.Series): Serie contenente le etichette.
+            x_label (str): Nome della colonna per X (default 'description').
+            y_label (str): Nome della colonna per y (default 'variety').
         """
         self.X = X
         self.y = y
+        self.x_label = x_label
+        self.y_label = y_label
         self.folds = None
         self.vectorizer = None
 
     @classmethod
-    def read_csv(cls, csv_path: str, text_column: str = 'description', label_column: str = 'variety'):
+    def read_csv(cls, csv_path: str, x_label: str = 'description', y_label: str = 'variety'):
         """
         Carica i dati da un file CSV.
 
         Parameters:
             csv_path (str): Percorso al file CSV.
-            text_column (str): Nome della colonna contenente il testo (default 'description').
-            label_column (str): Nome della colonna contenente le etichette (default 'variety').
+            x_label (str): Nome della colonna per X (default 'description').
+            y_label (str): Nome della colonna per y (default 'variety').
 
         Returns:
             WineDatasetManager: Un'istanza di WineDatasetManager con i dati caricati.
         """
         df = pd.read_csv(csv_path)
-        X = df[text_column]
-        y = df[label_column]
-        return cls(X, y)
+        X = df[x_label]
+        y = df[y_label]
+        return cls(X, y, x_label, y_label)
     
     def save(self, csv_path: str):
         """
@@ -47,7 +51,7 @@ class WineDatasetManager:
             csv_path (str): Percorso al file CSV.
         """
         assert isinstance(self.X, pd.Series), "X must be a pandas Series."
-        df = pd.DataFrame({'description': self.X, 'variety': self.y})
+        df = pd.DataFrame({self.x_label: self.X, self.y_label: self.y})
         df.to_csv(csv_path, index=False)
     
     def load(self, csv_path: str):
@@ -58,37 +62,37 @@ class WineDatasetManager:
             csv_path (str): Percorso al file CSV.
         """
         df = pd.read_csv(csv_path)
-        self.X = df['description']
-        self.y = df['variety']
+        self.X = df[self.x_label]
+        self.y = df[self.y_label]
 
     def get_x(self) -> pd.Series:
         """
-        Restituisce le caratteristiche (descrizioni dei vini).
-        
+        Restituisce le caratteristiche.
+
         Returns:
-            pd.Series: Le descrizioni dei vini.
+            pd.Series: Le caratteristiche.
         """
         return self.X
     
     def get_y(self) -> pd.Series:
         """
-        Restituisce le etichette (varietà di vini).
-        
+        Restituisce le etichette.
+
         Returns:
-            pd.Series: Le varietà di vini.
+            pd.Series: Le etichette.
         """
         return self.y
     
     def preprocess(self):
         """
-        Pre-elabora le descrizioni dei vini.
+        Pre-elabora le caratteristiche.
         """
         preprocessor = TextPreprocessor()
         self.X = self.X.apply(preprocessor.preprocess)
     
     def vectorize(self, vectorizer: TfidfVectorizer | None = None) -> TfidfVectorizer:
         """
-        Vettorizza le descrizioni dei vini e aggiorna X con i dati vettorizzati.
+        Vettorizza le caratteristiche e aggiorna X con i dati vettorizzati.
         """
         if vectorizer is not None:
             self.vectorizer = vectorizer
@@ -137,20 +141,16 @@ class WineDatasetManager:
         train_idx, valid_idx = self.folds[fold_idx]
 
         if isinstance(self.X, pd.Series) or isinstance(self.X, pd.DataFrame):
-            # Se X è un pd.Series o un pd.DataFrame
             X_train, X_valid = self.X.iloc[train_idx], self.X.iloc[valid_idx]
         elif isinstance(self.X, csr_matrix):
-            # Se X è una matrice sparsa
             X_train, X_valid = self.X[train_idx], self.X[valid_idx]
         else:
-            # Nel caso X sia un numpy array o altro
             X_train, X_valid = self.X[train_idx], self.X[valid_idx]
         
         y_train, y_valid = self.y.iloc[train_idx], self.y.iloc[valid_idx]
 
-        return WineDatasetManager(X_train, y_train), WineDatasetManager(X_valid, y_valid)
+        return WineDatasetManager(X_train, y_train, self.x_label, self.y_label), WineDatasetManager(X_valid, y_valid, self.x_label, self.y_label)
 
-    
     def split(self, test_size: float = 0.2, random_state: int = None) -> tuple['WineDatasetManager', 'WineDatasetManager']:
         """
         Divide il dataset in training e test set.
@@ -163,7 +163,7 @@ class WineDatasetManager:
             tuple: Due istanze di WineDatasetManager (train_set, test_set).
         """
         X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=test_size, random_state=random_state)
-        return WineDatasetManager(X_train, y_train), WineDatasetManager(X_test, y_test)
+        return WineDatasetManager(X_train, y_train, self.x_label, self.y_label), WineDatasetManager(X_test, y_test, self.x_label, self.y_label)
     
     def get_dataset(self):
         """
@@ -172,7 +172,7 @@ class WineDatasetManager:
         Returns:
             pd.DataFrame: Il dataset.
         """
-        return pd.DataFrame({'description': self.X, 'variety': self.y})
+        return pd.DataFrame({self.x_label: self.X, self.y_label: self.y})
     
     def classes(self):
         """
@@ -182,3 +182,18 @@ class WineDatasetManager:
             list: Le classi uniche.
         """
         return self.y.unique()
+    
+    def sample(self, n: int = 1) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Seleziona casualmente un campione di n osservazioni dal dataset.
+        
+        Parameters:
+            n (int): Il numero di osservazioni da selezionare (default 1).
+        
+        Returns:
+            tuple: Due array numpy (X, y).
+        """
+        idx = np.random.choice(len(self.X), n)
+        X = self.X[idx]
+        y = self.y[idx]
+        return X, y

@@ -77,34 +77,33 @@ class Plotter:
         plt.title('Difference in Wine Variety Counts Between Two Datasets')
         plt.show()
 
-    def plot_model_accuracy_comparison(self, model_data, index_to_hyperparams, title='Model Accuracy Comparison'):
+    def plot_model_accuracy_comparison(self, model_data, title='Model Accuracy Comparison', x_label='Hyperparameters',x_ticks_labels=None, label_rotation=45):
         """
         Crea e mostra un grafico a violino delle distribuzioni di accuratezza per ciascun modello.
         
         Parameters:
             model_data (list): Lista di dizionari contenenti i dati dei modelli.
-            index_to_hyperparams (dict): Mappa degli indici ai rispettivi iperparametri.
+            title (str): Titolo del grafico (default: 'Model Accuracy Comparison').
+            x_label (str): Etichetta dell'asse x (default: 'Hyperparameters').
+            x_ticks_labels (list): Etichette per l'asse x (default: None).
+            label_rotation (int): Rotazione delle etichette sull'asse x (default: 45).
         """
+        if x_ticks_labels is not None:
+            assert len(x_ticks_labels) == len(model_data), "Number of x_labels must match number of models"
         model_labels = []
         accuracies = []
 
         for i, d in enumerate(model_data):
-            index_label = f"Index {i}"
+            index_label = x_ticks_labels[i] if x_ticks_labels is not None else f'Model {i}'
             model_labels.extend([index_label] * len(d['accuracies']))
             accuracies.extend(d['accuracies'])
 
         plt.figure(figsize=(12, 8))
         sns.violinplot(x=model_labels, y=accuracies, inner="quartile", color='steelblue')
 
-        plt.xlabel('Hyperparameters')
+        plt.xlabel(x_label)
         plt.ylabel('Accuracy')
         plt.title(title)
-        plt.xticks(rotation=45)
+        plt.xticks(rotation=label_rotation)
         plt.show()
-
-        # Print the table of hyperparameters
-        print("\nHyperparameters Table:")
-        for i, hyperparams in index_to_hyperparams.items():
-            print(f"Index {i}: {hyperparams}")
-
 

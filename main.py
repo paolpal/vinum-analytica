@@ -1,9 +1,8 @@
-from vinum_analytica.data.dataset import WineDatasetManager # type: ignore
-from vinum_analytica.models.tree_model import TreeModel # type: ignore
-from vinum_analytica.models.forest_model import RandomForestModel # type: ignore
-from vinum_analytica.models.nn_model import NeuralNetworkModel # type: ignore
-from vinum_analytica.visualization.plots import Plotter # type: ignore
+from vinum_analytica.data import WineDatasetManager # type: ignore
+from vinum_analytica.models import TreeModel, RandomForestModel, NeuralNetworkModel, RegressorTreeModel# type: ignore
+from vinum_analytica.visualization import Plotter # type: ignore
 
+from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.metrics import confusion_matrix
 
 #dataset = WineDatasetManager.read_csv('./data/raw/winemag-data-130k-v2.csv')
@@ -11,16 +10,18 @@ from sklearn.metrics import confusion_matrix
 #dataset.preprocess()
 
 print('Loading dataset...', end='')
-dataset = WineDatasetManager()
-dataset.load('./data/processed/train.csv')
+dataset = WineDatasetManager(y_label='price')
+#dataset.load('./data/processed/train.csv')
+dataset.load('./data/processed/train_regression.csv')
 print('done')
 
-train, valid = dataset.split()
+#train, valid = dataset.split()
+train = dataset
 vec = train.vectorize()
 
-print('Oversampling dataset...', end='')
-train.oversample()
-print('done')
+#print('Oversampling dataset...', end='')
+#train.oversample()
+#print('done')
 
 # Inizializza il modello
 #forest = RandomForestModel(vectorizer=vec)
@@ -31,7 +32,8 @@ print('done')
         vectorizer=vec
     )
 """
-tree = TreeModel(vectorizer=vec)
+#tree = TreeModel(vectorizer=vec)
+tree = RegressorTreeModel(vectorizer=vec)
 
 # Addestra il modello
 print('Training model...', end='')
@@ -41,21 +43,22 @@ tree.train(train)
 print('done')
 
 # Valuta il modello
-print('Evaluating model...', end='')
-accuracy = tree.evaluate(valid)
+#print('Evaluating model...', end='')
+#accuracy = tree.evaluate(valid, mean_squared_error)
 #accuracy = forest.evaluate(valid)
 #accuracy = nn.evaluate(valid)
-print('done')
-print(f'Accuracy: {accuracy}')
+#print('done')
+#print(f'Accuracy: {accuracy}')
 
 #forest.save('./models/forest_model_f.pkl')
-#nn.save('./models/nn_model.pkl')
+#nn.save('./models/nn_model.pkl'
+tree.save('./models/regressor_tree_model.pkl')
 
-print('Computing confusion matrix...', end='')
-cm = tree.evaluate(valid, metric=confusion_matrix, normalize='true')
+#print('Computing confusion matrix...', end='')
+#cm = tree.evaluate(valid, metric=confusion_matrix, normalize='true')
 #cm = forest.evaluate(valid, metric=confusion_matrix, normalize='true')
 #cm = nn.evaluate(valid, metric=confusion_matrix, normalize='true')
-print('done')
-plotter = Plotter()
+#print('done')
+#plotter = Plotter()
 
-plotter.plot_confusion_matrix(cm, classes=tree.classes())
+#plotter.plot_confusion_matrix(cm, classes=tree.classes())
