@@ -101,8 +101,7 @@ class RegressorNeuralNetworkModel(Model):
     def load(cls, path: str) -> 'RegressorNeuralNetworkModel':
         with open(path, 'rb') as file:
             state_dict, vectorizer, hyperparameters = pickle.load(file)
-            regressor = cls(**hyperparameters)
+            regressor = cls(**hyperparameters, vectorizer=vectorizer)
             regressor.model.load_state_dict(state_dict)
-            regressor.vectorizer = vectorizer
         return regressor
     
