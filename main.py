@@ -35,6 +35,7 @@ vec = train.vectorize()
 #tree = TreeModel(vectorizer=vec)
 #tree = RegressorTreeModel(vectorizer=vec)
 model = RegressorNeuralNetworkModel(
+    vectorizer=vec,
     input_size=vec.get_feature_names_out().shape[0],
     epochs=5,
     lr=0.001
