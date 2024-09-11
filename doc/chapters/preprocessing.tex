@@ -1,0 +1,37 @@
+\section{Preprocessing}
+Data preprocessing is a critical step in any 
+machine learning application. In this project, 
+we applied several preprocessing techniques to 
+prepare the text data for modeling:
+
+\begin{itemize}
+    \item \textbf{Text Normalization:} 
+    All text was converted to lowercase to ensure 
+    uniformity. Additionally, Unicode characters were 
+    transformed into ASCII to handle special characters 
+    and maintain consistency across the dataset.
+    \item \textbf{Tokenization:} 
+    Text was split into individual words or tokens.
+    \item \textbf{Stop Words Removal:} 
+    Common words that do not contribute to the 
+    semantic meaning were removed.
+    \item \textbf{Stemming/Lemmatization:} 
+    Words were reduced to their base or root form.
+\end{itemize}
+
+
+As shown in \autoref{fig:grape_variety_distribution},
+the dataset is imbalanced. The most common
+grape variety is Pinot Noir, and the least common
+is Grenache.
+
+The dataset was split into a training set
+and a test set with a 80\% - 20\% ratio.
+
+\subsection{Feature Vectorization}
+To transform the text data into a numerical format
+ suitable for machine learning, we used the TF-IDF 
+ (Term Frequency-Inverse Document Frequency) method. 
+ This approach captures the importance of words in 
+ the context of the entire dataset and helps in feature 
+ extraction.

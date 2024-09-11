@@ -1,0 +1,54 @@
+\begin{table*}
+    \centering
+    \begin{tabular}{@{}cccc@{}}
+        \toprule
+        \textbf{Index} & \textbf{Criterion} & \textbf{Min Impurity Decrease} & \textbf{Max Depth} \\ \midrule
+        0 & log\_loss & 0.0 & 1000 \\
+        1 & entropy & 1e-12 & 1000 \\
+        2 & gini & 0.0001 & 1000 \\
+        3 & entropy & 0.0001 & None \\
+        4 & entropy & 1e-12 & None \\
+        5 & log\_loss & 0.0001 & None \\
+        6 & gini & 1e-08 & 1000 \\
+        7 & entropy & 1e-08 & 1000 \\ \bottomrule
+    \end{tabular}
+    \caption{Hyperparameters for Decision Tree}
+    \label{tab:dt_search_spaces}
+\end{table*}
+
+
+\begin{table*}
+    \centering
+    \begin{tabular}{@{}cccc@{}}
+        \toprule
+        \textbf{Index} & \textbf{n\_estimators} & \textbf{criterion} & \textbf{max\_depth} \\ \midrule
+        0 & 150 & log\_loss & None \\
+        1 & 50 & gini & None \\
+        2 & 50 & gini & 1000 \\
+        3 & 100 & entropy & None \\
+        4 & 50 & entropy & None \\
+        5 & 100 & gini & 1000 \\
+        6 & 50 & log\_loss & None \\
+        7 & 100 & gini & None \\ \bottomrule
+    \end{tabular}
+    \caption{Hyperparameters for Random Forest}
+    \label{tab:rf_search_spaces}
+\end{table*}
+
+\begin{table*}
+    \centering
+    \begin{tabular}{@{}cccc@{}}
+        \toprule
+        \textbf{Index} & \textbf{Hidden Size} & \textbf{Epochs} & \textbf{Learning Rate} \\ \midrule
+        0 & 64 & 10 & 0.005 \\
+        1 & 64 & 5 & 0.001 \\
+        2 & 64 & 15 & 0.005 \\
+        3 & 16 & 5 & 0.01 \\
+        4 & 16 & 5 & 0.005 \\
+        5 & 64 & 5 & 0.005 \\
+        6 & 16 & 15 & 0.01 \\
+        7 & 64 & 10 & 0.01 \\ \bottomrule
+    \end{tabular}
+    \caption{Hyperparameters for Neural Network}
+    \label{tab:nn_search_spaces}
+\end{table*}

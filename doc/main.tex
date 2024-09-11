@@ -3,6 +3,8 @@
 \usepackage{multicol, graphicx, float, multirow}
 \usepackage{url}
 \usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{booktabs}
 
 \hypersetup{
     colorlinks=true,
@@ -15,15 +17,19 @@
 \hyphenation{analy-sis}
 
 \author{Paolo Palumbo}
-\title{Decision Trees vs Neural Networks for Classification of Emotions from Text}
+\title{Vinum Analytica: Wine Review Insight}
 
 \begin{document}
 \maketitle
 \begin{multicols}{2}
+\input{chapters/abstract}
 \input{chapters/introduction}
-\input{chapters/data}
+\input{chapters/corpus}
+\input{chapters/preprocessing}
 \input{chapters/models}
 \input{chapters/results}
+\input{chapters/future}
+\input{chapters/conclusion}
 \end{multicols}
 
 \bibliographystyle{ieeetr}

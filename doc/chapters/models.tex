@@ -1,56 +1,44 @@
-\section{Models}
+\section{Modeling and Hyperparame-
+ter Tuning}
+
 Three different categories of models were
 considered:
 \begin{itemize}
     \item \textit{Decision Trees}
     \item \textit{Random Forests}
     \item \textit{Neural Networks}
-    \begin{itemize}
-        \item \textit{Feedforward Networks}
-        \item \textit{LSTM Networks}
-    \end{itemize}
 \end{itemize}
-Decision Trees and Random Forests both use
-the BoW preprocessing with \textbf{binary} 
-encoding.
-Feedforward Neural Networks use the BoW
-preprocessing with \textbf{TFIDF} encoding.
-LSTM Networks were tested with both the
-WE and GE preprocessing.
+
 
 \subsection{Imbalanced Dataset}
-To handle the imbalanced dataset, a class
-weight was assigned to each class equal to
-$W_c=\frac{|D|}{|C||D_c|}$ where $|D|$ is
-the size of the dataset, $|C|$ is the number
-of classes and $|D_c|$ is the number of
-samples in class $c$. This weight was used in
-the criterion of the Decision Trees and Random
-Forests models, and in the loss function of
-the Neural Networks models.
+To overcome the class imbalance in the dataset, 
+the training set was oversampled using the SMOTE 
+technique. The number of records was limited to 
+200,000 to control computational time and resources. 
+SMOTE generates synthetic samples for the minority 
+classes by interpolating between existing samples, 
+which helps to balance the class distribution without 
+duplicating data. This approach improves the model's 
+ability to generalize, especially for underrepresented 
+classes, while reducing the risk of overfitting. 
+In addition to SMOTE, class weights were assigned 
+to further address the imbalance during training, 
+ensuring that minority classes had adequate influence 
+on the model’s learning process. 
 
 \subsection{Model Selection}
-To find a good hyperparameter configuration
-for each model, a random search was performed.
-The search was done with 10 iterations for
-each model (Decision Trees, Random Forests 
-and Neural Networks). Each configuration was
-evaluated with a 6-fold cross-validation on
-the training set. Two subsequent random
-searches were performed, the second one
-narrowing the search space around the best
-configuration found in the first search.
-The search spaces for each model are shown
-in \autoref{tab:dt_search_spaces_1}, 
-\autoref{tab:rf_search_spaces_1} and 
-\autoref{tab:nn_search_spaces_1} for the 
-first search, and in 
-\autoref{tab:dt_search_spaces_2},
-\autoref{tab:rf_search_spaces_2} and
-\autoref{tab:nn_search_spaces_2} for the
-second search.
-
-%\input{chapters/hypers}
+To identify the optimal hyperparameter settings for 
+each model, we performed a random search by exploring 
+8 randomly selected hyperparameter combinations for 
+each model (Decision Trees, Random Forests, and 
+Neural Networks). Each combination was evaluated 
+using 6-fold cross-validation on the training set. 
+The hyperparameter search spaces for the first phase 
+are outlined in \autoref{tab:dt_search_space}, 
+\autoref{tab:rf_search_space}, and 
+\autoref{tab:nn_search_space}.
 
 Accuracy was used as the metric to evaluate
 the models.
+
+\input{chapters/hypers}
