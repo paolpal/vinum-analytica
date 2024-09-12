@@ -23,7 +23,7 @@ dataset = WineDatasetManager()
 dataset.load('./data/processed/train_classification.csv')
 
 # Campiona 8 combinazioni di iperparametri casuali
-param_combinations = random.sample(param_combinations, 8)
+param_combinations = random.sample(param_combinations, 10)
 
 results = []
 printable_combinations = []
