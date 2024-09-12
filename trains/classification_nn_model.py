@@ -21,7 +21,10 @@ hyperparams = {
         }
 
 
-model = NeuralNetworkModel(vectorizer=vec, **hyperparams)
+model = NeuralNetworkModel(
+    input_size=vec.get_feature_names_out().shape[0],
+    output_size=len(train.classes()),
+    vectorizer=vec, **hyperparams)
 
 logging.info('Training model...')
 model.train(train)
