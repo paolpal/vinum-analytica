@@ -2,8 +2,8 @@ import itertools
 import json
 import random
 from tqdm import tqdm
-from vinum_analytica.data.dataset import WineDatasetManager  # type: ignore
-from vinum_analytica.models.forest_model import RandomForestModel  # type: ignore
+from vinum_analytica.data import WineDatasetManager  # type: ignore
+from vinum_analytica.models import RandomForestModel  # type: ignore
 
 # Definizione della griglia di iperparametri per la rete neurale
 rf_param_grid = {
@@ -22,7 +22,7 @@ param_combinations = list(itertools.product(*param_values))
 
 # Carica il dataset
 dataset = WineDatasetManager()
-dataset.load('./data/processed/train.csv')
+dataset.load('./data/processed/train_classification.csv')
 
 # Campiona 8 combinazioni di iperparametri casuali
 param_combinations = random.sample(param_combinations, 8)
