@@ -132,9 +132,12 @@ class NeuralNetworkModel(Model):
         Parameters:
             path (str): Il percorso del file in cui salvare il modello.
         """
-        with open(path, 'wb') as file:
-            #pickle.dump((self.model.state_dict(), self.vectorizer), file)
-            pickle.dump((self.model.state_dict(), self.vectorizer, self.label_encoder, self.hyperparameters), file)
+        torch.save({
+            'state_dict': self.model.state_dict(),
+            'vectorizer': self.vectorizer,
+            'label_encoder': self.label_encoder,
+            'hyperparameters': self.hyperparameters
+        }, path)
 
     @classmethod
     def load(cls, path) -> "NeuralNetworkModel":
@@ -144,11 +147,26 @@ class NeuralNetworkModel(Model):
         Parameters:
             path (str): Il percorso del file da cui caricare il modello.
         """
-        with open(path, 'rb') as file:
-            state_dict, vectorizer, label_encoder, hyperparameters = pickle.load(file)
-            nn = cls(input_size=hyperparameters['input_size'], output_size=hyperparameters['output_size'], hidden_size=hyperparameters['hidden_size'], vectorizer=vectorizer, lr=hyperparameters['lr'])
-            nn.model.load_state_dict(state_dict)
-            nn.label_encoder = label_encoder
+        device = torch.device(
+            'cuda' if torch.cuda.is_available() 
+            else 'mps' if torch.backends.mps.is_available()
+            else 'cpu'
+        )
+
+        # Caricare tutto con torch.load e mappare su CPU o GPU
+        checkpoint = torch.load(path, map_location=device)
+
+        hyperparameters = checkpoint['hyperparameters']
+        nn = cls(input_size=hyperparameters['input_size'], output_size=hyperparameters['output_size'], hidden_size=hyperparameters['hidden_size'], vectorizer=checkpoint['vectorizer'], lr=hyperparameters['lr'])
+        
+        # Caricare lo stato del modello
+        nn.model.load_state_dict(checkpoint['state_dict'])
+        nn.model.to(device)
+        
+        # Ripristinare altri attributi
+        nn.label_encoder = checkpoint['label_encoder']
+        nn.device = device  # Salva il dispositivo per futuri usi
+
         return nn
 
     def classes(self):
