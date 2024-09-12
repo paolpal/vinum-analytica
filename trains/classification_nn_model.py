@@ -8,12 +8,12 @@ logging.basicConfig(level=logging.INFO)
 # Carica il dataset
 logging.info('Loading dataset...')
 dataset = WineDatasetManager()
-dataset.load('./data/processed/train.csv')
+dataset.load('./data/processed/train_classification.csv')
 logging.info('done')
 
 train = dataset
 vec = train.vectorize()
-train.oversample()
+train.resample()
 
 hyperparams = {
             "hidden_size": 64,

@@ -6,7 +6,11 @@ import re
 data_path = './data/raw/winemag-data-130k-v2.csv'  # Modificare il percorso se necessario
 df = pd.read_csv(data_path, index_col=0)
 
+df = df.drop_duplicates(subset=['description', 'variety']) # Rimuovere i duplicati
+
 df = df[~df['variety'].str.contains('Blend', case=False, na=False)]  # Rimuovere i blend
+df = df[~df['variety'].str.contains('Portuguese', case=False, na=False)]  # Rimuovere i blend
+df = df[~df['variety'].str.contains(',', case=False, na=False)]  # Rimuovere i blend
 variety_counts = df['variety'].value_counts()
 
 support_threshold = 0.006*len(df)  # Set the support threshold as desired
@@ -29,7 +33,7 @@ def remove_variety_from_description(row):
     # Itera su ogni parola della varietà e rimuovila dalla descrizione
     for word in variety_words:
         # Crea una regex per trovare la parola come parola intera, ignorando il case
-        regex = r'\b' + re.escape(unidecode(word).lower()) + r'(s|es|ies)?\b'
+        regex = re.escape(unidecode(word).lower())  # Rimuove accenti e costruisce la regex
         clean_description = re.sub(regex, '', unidecode(clean_description), flags=re.IGNORECASE)
 
     return clean_description.strip()  # Rimuovi eventuali spazi aggiuntivi
@@ -58,5 +62,5 @@ print(f'Varieties with contamination: {contaminated_varieties}')
 df = df.drop(columns=['variety_contamination'])
 
 # Salvare il dataset pulito
-clean_data_path = './data/raw/clean_data.csv'  # Modificare il percorso se necessario
+clean_data_path = './data/raw/clean_data_classification.csv'  # Modificare il percorso se necessario
 df.to_csv(clean_data_path, index=False)

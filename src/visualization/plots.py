@@ -76,7 +76,7 @@ class Plotter:
         plt.xticks(rotation=label_rotation)
         plt.show()
 
-    def plot_validation_test_accuracy_comparison(self, model_data, title='', x_label='Models', x_ticks_labels=None):
+    def plot_validation_test_accuracy_comparison(self, model_data, title='', x_label='Models', x_ticks_labels=None, bar_width=0.8):
         """
         Crea e mostra un grafico a barre per confrontare le accuratezze dei modelli su validation e test.
 
@@ -101,14 +101,14 @@ class Plotter:
 
         # Creare il bar plot
         plt.figure(figsize=(10, 6))
-        sns.barplot(x='Model', y='Accuracy', hue='Type', data=df)
+        sns.barplot(x='Model', y='Accuracy', hue='Type', data=df, width=bar_width)
 
         # Personalizzare il grafico
         plt.title(title)
         plt.xlabel(x_label)
         plt.ylabel('Accuracy')
         plt.ylim(0, 1)
-        plt.legend(title='Type')
+        plt.legend()
 
         # Mostrare il grafico
         plt.show()

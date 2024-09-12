@@ -6,6 +6,8 @@ import re
 data_path = './data/raw/winemag-data-130k-v2.csv'  # Modificare il percorso se necessario
 df = pd.read_csv(data_path, index_col=0)
 
+df = df.drop_duplicates(subset=['description', 'price']) # Rimuovere i duplicati
+
 # rimuovi le recensioni senza prezzo
 df = df.dropna(subset=['price'])
 

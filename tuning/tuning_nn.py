@@ -7,8 +7,8 @@ from vinum_analytica.models.nn_model import NeuralNetworkModel  # type: ignore
 # Definizione della griglia di iperparametri per la rete neurale
 nn_param_grid = {
     'hidden_size': [16, 32, 64],  # Dimensioni del livello nascosto
-    'epochs': [5, 10, 15],         # Numero di epoche
-    'lr': [0.001, 0.01, 0.1]       # Learning rate
+    'epochs': [6, 8, 10],         # Numero di epoche
+    'lr': [0.005, 0.001, 0.0005]       # Learning rate
 }
 
 # Ottieni le chiavi e i valori degli iperparametri
@@ -46,7 +46,7 @@ for combination in param_combinations:
         # Suddividi il dataset in training e validation per questo fold
         train, valid = dataset.fold(fold, n_folds=n_folds)
         vec = train.vectorize()
-        train.oversample()
+        train.resample()
 
         # Inizializza il modello con i parametri attuali
         nn = NeuralNetworkModel(

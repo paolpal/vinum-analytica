@@ -8,9 +8,9 @@ from vinum_analytica.models.forest_model import RandomForestModel  # type: ignor
 # Definizione della griglia di iperparametri per la rete neurale
 rf_param_grid = {
     'n_estimators': [50, 100, 150],                                 # Numero di alberi nella foresta
-    'criterion': ['gini', 'entropy', 'log_loss'],                   # Funzione di qualità da ottimizzare
-    'min_impurity_decrease': [0.0, 1e-4, 1e-8, 1e-12],              # Soglia per la riduzione dell'impurità
-    'max_depth': [None, 1000]                                       # Profondità massima dell'albero
+    'criterion': ['gini', 'log_loss'],                   # Funzione di qualità da ottimizzare
+    'min_impurity_decrease': [0.0, 1e-8, 1e-10, 1e-12],              # Soglia per la riduzione dell'impurità
+    'max_depth': [150, 200, None]                                       # Profondità massima dell'albero
 }
 
 # Ottieni le chiavi e i valori degli iperparametri
@@ -48,7 +48,7 @@ for combination in param_combinations:
         # Suddividi il dataset in training e validation per questo fold
         train, valid = dataset.fold(fold, n_folds=n_folds)
         vec = train.vectorize()
-        train.oversample()
+        train.resample()
 
         # Inizializza il modello con i parametri attuali
         rf = RandomForestModel(

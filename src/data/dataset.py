@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import StratifiedKFold, train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
+from imblearn.under_sampling import RandomUnderSampler
 from imblearn.over_sampling import SMOTE
 from scipy.sparse import csr_matrix
 
@@ -102,14 +103,38 @@ class WineDatasetManager:
             self.X = self.vectorizer.fit_transform(self.X)
         return self.vectorizer
 
-    def oversample(self, max_samples : int = 200000):
+    def resample(self, max_samples : int = 200000):
         """
-        Esegue l'oversampling del training set usando SMOTE.
+        Esegue il resample del training set usando SMOTE e RandomUnderSampler.
         """
         class_counts = self.y.value_counts()
         num_classes = len(class_counts)
-        max_samples_per_class = max_samples // num_classes
-        class_dict = {cls: max_samples_per_class if count < max_samples_per_class else count for cls, count in class_counts.items()}
+        samples_per_class = max_samples // num_classes
+        
+        # Dizionari per oversampling e undersampling
+        undersample_dict = {}
+        oversample_dict = {}
+
+        for cls, count in class_counts.items():
+            if count > samples_per_class:
+                # La classe ha più campioni di quelli desiderati, quindi undersample
+                undersample_dict[cls] = samples_per_class
+            elif count < samples_per_class:
+                # La classe ha meno campioni di quelli desiderati, quindi oversample
+                oversample_dict[cls] = samples_per_class
+
+        # Esegui undersampling e oversampling
+        if undersample_dict:
+            self.undersample(undersample_dict)
+        if oversample_dict:
+            self.oversample(oversample_dict)
+
+    def undersample(self, class_dict: dict = None):
+
+        undersampler = RandomUnderSampler(sampling_strategy=class_dict)
+        self.X, self.y = undersampler.fit_resample(self.X, self.y)
+
+    def oversample(self, class_dict: dict = None):
 
         smote = SMOTE(sampling_strategy=class_dict)
         X_res, y_res = smote.fit_resample(self.X, self.y)
