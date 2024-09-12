@@ -1,4 +1,4 @@
-\section{Experimental Results and Analysis}
+\section{Experimental Results and Discussion}
 
 \subsection{Hyperparameter Selection}
 
@@ -20,20 +20,23 @@ highest overall performance.
 
 \subsubsection{Decision Tree Results}
 
-The Decision Tree model was evaluated with various 
-hyperparameters. Among the configurations tested, 
-the best performance was achieved with a maximum 
-depth of 1000, using the "gini" criterion and a minimum 
-impurity decrease of 0.0. 
-This setting resulted in the highest average accuracy 
-of approximately 0.4578. The models using the "entropy" 
-criterion and "log\_loss" criterion with a maximum 
-depth of 1000 also performed well, with accuracies 
-around 0.4199 and 0.4136, respectively. 
-On the other hand, configurations with a maximum depth 
-of \textit{null} and "entropy" or "log\_loss" criteria 
-yielded lower accuracies, indicating that deeper trees 
-tend to generalize better in this scenario.
+As shown in \autoref{tab:dt_search_spaces}, 
+the Decision Tree models were evaluated using a 
+variety of hyperparameters. The best-performing model, 
+Model 6, used the "gini" criterion with a minimum 
+impurity decrease of 1e-08 and a maximum depth of 1000. 
+This combination of hyperparameters resulted in the 
+highest average accuracy of 0.4530.
+
+Other models used different criteria and impurity 
+thresholds, but none matched the performance of Model 6. 
+For example, Model 0 employed the "log\_loss" criterion 
+with no minimum impurity decrease and a max depth of 
+1000, achieving a lower average accuracy of 0.4089. 
+Model 4, which used "entropy" with a minimum impurity 
+decrease of 1e-12 and no maximum depth constraint, 
+performed slightly better with an average accuracy of 
+0.4130.
 
 \begin{figure}[H]
     \centering
@@ -42,25 +45,31 @@ tend to generalize better in this scenario.
     \label{fig:dt_violin_plot}
 \end{figure}
 
-\subsubsection{Random Forest Results}
+The Wilcoxon test results further support the 
+superiority of Model 6, confirming statistically 
+significant differences between its performance and 
+that of the other models.
 
-The Random Forest model demonstrated its best performance 
-with a configuration of 100 estimators, "gini" criterion, 
-and a maximum depth of \textit{null}. 
-This setup achieved the highest average accuracy of 
-approximately 0.6267. 
-Other effective configurations included 100 estimators 
-with the "gini" criterion and a maximum depth of 1000, 
-reaching an accuracy of around 0.6241. 
-The "log\_loss" criterion with 150 estimators also 
-performed well but was slightly less accurate compared 
-to the "gini" based configurations. 
-Conversely, models with fewer estimators or different 
-criteria, such as "entropy," generally resulted 
-in lower accuracies. This indicates that increasing 
-the number of estimators and optimizing depth are 
-crucial for improving performance in 
-Random Forest models.
+\subsubsection{Random Forest Results}
+From \autoref{fig:rf_violin_plot}, it is evident 
+that models 5 and 7 performed better than the others. 
+Specifically, model 5 achieved the highest performance 
+with an average accuracy of 0.6202. 
+The accuracy ranged between 0.6144 and 
+0.6241, utilizing a configuration of 
+100 trees (n\_estimators), 
+the "gini" criterion, and a maximum depth
+of 1000. Other models demonstrated lower 
+performance, with model 4 showing the lowest average 
+accuracy of {0.5338}.
+
+The {Wilcoxon test} results indicate that the 
+majority of models (0, 1, 2, 3, 4, 6) exhibit 
+{p-values} of {0.03125}, confirming a 
+statistically significant difference when compared to 
+the best model (index 5). Model 7, however, had a {p-value} 
+of {0.6858}, suggesting no significant difference 
+in performance compared to the best-performing model.
 
 \begin{figure}[H]
     \centering
@@ -71,21 +80,33 @@ Random Forest models.
 
 \subsubsection{Neural Network Results}
 
-For the Neural Network models, the configurations 
-with a hidden size of 64 and learning rates of 0.005 
-or 0.01 yielded the highest average accuracies. 
-Specifically, the setting with 64 hidden units, 
-10 epochs, and a learning rate of 0.005 achieved 
-an accuracy of around 0.6097, while another setting 
-with the same hidden size and learning rate of 0.01 
-resulted in an accuracy of approximately 0.6136. 
-The best performance was observed with a configuration 
-of 64 hidden units, 5 epochs, and a learning rate of 0.001, 
-achieving an accuracy of 0.6311. 
-In contrast, models with smaller hidden sizes 
-and shorter epochs generally showed lower performance, 
-suggesting that deeper networks with more training epochs 
-are more effective in capturing complex patterns.
+For the Neural Network models, the detailed results 
+are illustrated in \autoref{fig:nn_violin_plot}. 
+Model 1 demonstrated the highest performance with 
+an average accuracy of 0.6216. This model was configured 
+with a hidden size of 64, a learning rate of 0.001, 
+and trained for 5 epochs. The accuracy of Model 1 
+ranged from 0.6120 to 0.6311.
+
+In contrast, the other models showed varying 
+performance levels. Model 0, for instance, achieved 
+an average accuracy of 0.6033 with a range of 
+[0.5991, 0.6097], while Model 5, which also performed 
+well, reached an average accuracy of 0.6102. 
+The Wilcoxon test results further validate the 
+significance of these findings. 
+Models 0, 2, 3, 4, 6 and 7 had p-values of 0.03125, 
+indicating statistically significant differences 
+in performance compared to Model 1. 
+The p-value for Model 5 was 0.09375, suggesting a 
+less significant difference.
+
+The superior performance of Model 1 suggests that 
+the chosen hyperparameters effectively balance the 
+complexity of the model and the learning process, 
+leading to the highest overall accuracy among the 
+tested neural network configurations.
+
 
 \begin{figure}[H]
     \centering
@@ -97,28 +118,27 @@ are more effective in capturing complex patterns.
 \input{chapters/experiments}
 
 \subsection{Best Model Comparison}
+The mean accuracies of the three evaluated models 
+reveal that the Neural Network (NN) performed the best, 
+with a mean accuracy of 0.6216, using 64 hidden units, 
+5 epochs, and a learning rate of 0.001. 
+This was closely followed by the Random Forest (RF), 
+which achieved a mean accuracy of 0.6202 with 
+100 estimators, the "gini" criterion, and a maximum depth 
+of 1000. The Decision Tree (DT) model, using the 
+"gini" criterion, a minimum impurity decrease of 1e-08, 
+and a maximum depth of 1000, recorded a lower 
+mean accuracy of 0.4530. 
 
-Among the evaluated models, the Neural Network (NN) 
-configuration with 64 hidden units, 5 epochs, and a 
-learning rate of 0.001 achieved the highest average 
-accuracy of approximately 0.6244. 
-This model demonstrates strong performance, 
-particularly in its ability to capture complex patterns 
-within the data. The Random Forest (RF) model, with 100 
-estimators, "gini" criterion, and a maximum depth 
-of 1000, also performed impressively, attaining an 
-average accuracy of around 0.6219. 
-Although slightly lower than the NN, it remains a 
-robust model for classification tasks. 
-The Decision Tree (DT) model, using the "gini" criterion, 
-a minimum impurity decrease of 1e-08, and a maximum 
-depth of 1000, had an average accuracy of about 0.4579. 
-While this accuracy is significantly lower than that 
-of the RF and NN models, it is important to note that 
-Decision Trees are generally less effective on their 
-own compared to ensemble methods and neural networks. 
-Overall, the Neural Network achieved the highest 
-performance, followed closely by the Random Forest, 
-while the Decision Tree showed comparatively lower 
-results.
+Based on the Wilcoxon test, the DT model showed 
+a statistically significant difference when compared 
+to the NN model (p-value = 0.03125), indicating that 
+its performance is inferior. In contrast, the RF model's 
+p-value of 0.84375 suggests that there is no statistically 
+significant difference between the performance of 
+RF and NN, reinforcing that both models perform similarly well, 
+with the NN holding a slight edge. 
+Thus, the NN model is identified as the best model 
+in this comparison.
+
 

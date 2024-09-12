@@ -6,7 +6,7 @@ from vinum_analytica.models.nn_model import NeuralNetworkModel  # type: ignore
 
 # Definizione della griglia di iperparametri per la rete neurale
 nn_param_grid = {
-    'hidden_size': [32, 64, 128, 128],  # Dimensioni del livello nascosto
+    'hidden_size': [16, 32, 64],  # Dimensioni del livello nascosto
     'epochs': [5, 10, 15],         # Numero di epoche
     'lr': [0.001, 0.01, 0.1]       # Learning rate
 }

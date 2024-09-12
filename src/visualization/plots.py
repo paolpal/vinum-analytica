@@ -46,38 +46,7 @@ class Plotter:
         plt.title('Count of Wine Varieties')
         plt.show()
 
-    def plot_variety_difference(self, dataset_manager1, dataset_manager2):
-        """
-        Plot the difference in count of each variety between two datasets.
-
-        Parameters:
-            dataset_manager1 (WineDatasetManager): The first dataset manager containing a wine reviews dataset.
-            dataset_manager2 (WineDatasetManager): The second dataset manager containing another wine reviews dataset.
-        """
-        # Ottenere i dataset
-        dataset1 = dataset_manager1.get_dataset()
-        dataset2 = dataset_manager2.get_dataset()
-
-        # Conteggio varietà per ciascun dataset
-        count1 = dataset1['variety'].value_counts()
-        count2 = dataset2['variety'].value_counts()
-
-        # Allineare i due conteggi sui medesimi indici (varietà di vino)
-        combined_count = pd.DataFrame({'dataset1': count1, 'dataset2': count2}).fillna(0)
-
-        # Calcolare la differenza tra i due dataset
-        combined_count['difference'] = combined_count['dataset1'] - combined_count['dataset2']
-
-        # Plot della differenza
-        plt.figure(figsize=(12, 6))
-        sns.barplot(x=combined_count.index, y='difference', data=combined_count, color='steelblue', order=dataset1['variety'].value_counts().index)
-        plt.xticks(rotation=90)
-        plt.xlabel('Variety')
-        plt.ylabel('Difference in Count')
-        plt.title('Difference in Wine Variety Counts Between Two Datasets')
-        plt.show()
-
-    def plot_model_accuracy_comparison(self, model_data, title='Model Accuracy Comparison', x_label='Hyperparameters',x_ticks_labels=None, label_rotation=45):
+    def plot_violin_accuracy_comparison(self, model_data, title='Model Accuracy Comparison', x_label='Hyperparameters',x_ticks_labels=None, label_rotation=45):
         """
         Crea e mostra un grafico a violino delle distribuzioni di accuratezza per ciascun modello.
         
@@ -100,6 +69,36 @@ class Plotter:
 
         plt.figure(figsize=(12, 8))
         sns.violinplot(x=model_labels, y=accuracies, inner="quartile", color='steelblue')
+
+        plt.xlabel(x_label)
+        plt.ylabel('Accuracy')
+        plt.title(title)
+        plt.xticks(rotation=label_rotation)
+        plt.show()
+
+    def plot_bar_accuracy_comparison(self, model_data, title='Model Accuracy Comparison', x_label='Hyperparameters', x_ticks_labels=None, label_rotation=45):
+        """
+        Crea e mostra un grafico a barre delle accuratezze dei modelli.
+
+        Parameters:
+            model_data (list): Lista di dizionari contenenti i dati dei modelli.
+            title (str): Titolo del grafico (default: 'Model Accuracy Comparison').
+            x_label (str): Etichetta dell'asse x (default: 'Hyperparameters').
+            x_ticks_labels (list): Etichette per l'asse x (default: None).
+            label_rotation (int): Rotazione delle etichette sull'asse x (default: 45).
+        """
+        if x_ticks_labels is not None:
+            assert len(x_ticks_labels) == len(model_data), "Number of x_labels must match number of models"
+        model_labels = []
+        accuracies = []
+
+        for i, d in enumerate(model_data):
+            index_label = x_ticks_labels[i] if x_ticks_labels is not None else f'Model {i}'
+            model_labels.extend([index_label] * len(d['accuracies']))
+            accuracies.extend(d['accuracies'])
+
+        plt.figure(figsize=(12, 8))
+        sns.barplot(x=model_labels, y=accuracies, color='steelblue')
 
         plt.xlabel(x_label)
         plt.ylabel('Accuracy')
