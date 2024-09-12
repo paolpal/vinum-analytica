@@ -13,6 +13,7 @@ logging.info('done')
 
 train = dataset
 vec = train.vectorize()
+train.oversample()
 
 hyperparams = {
             "hidden_size": 64,
