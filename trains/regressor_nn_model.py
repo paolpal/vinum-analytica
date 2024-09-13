@@ -1,5 +1,5 @@
 from vinum_analytica.data import WineDatasetManager # type: ignore
-from vinum_analytica.models import NeuralNetworkModel # type: ignore
+from vinum_analytica.models import RegressorNeuralNetworkModel # type: ignore
 
 import logging
 
@@ -7,30 +7,28 @@ logging.basicConfig(level=logging.INFO)
 
 # Carica il dataset
 logging.info('Loading dataset...')
-dataset = WineDatasetManager()
-dataset.load('./data/processed/train_classification.csv')
+dataset = WineDatasetManager(y_label='price')
+dataset.load('./data/processed/train_regression.csv')
 logging.info('done')
 
 train = dataset
 vec = train.vectorize()
-train.resample()
+scl = train.normalize()
 
 hyperparams = {
-            "hidden_size": 64,
-            "epochs": 8,
+            "epochs": 5,
             "lr": 0.0005
         }
 
-
-model = NeuralNetworkModel(
+model = RegressorNeuralNetworkModel(
     input_size=vec.get_feature_names_out().shape[0],
-    output_size=len(train.classes()),
-    vectorizer=vec, **hyperparams)
+    vectorizer=vec, 
+    scaler=scl, **hyperparams)
 
 logging.info('Training model...')
 model.train(train)
 logging.info('done')
 
 logging.info('Saving model...')
-model.save('./models/nn_model.pkl')
+model.save('./models/regressor_nn_model.pkl')
 logging.info('done')

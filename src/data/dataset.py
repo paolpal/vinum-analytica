@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import StratifiedKFold, train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.preprocessing import StandardScaler
 from imblearn.under_sampling import RandomUnderSampler
 from imblearn.over_sampling import SMOTE
 from scipy.sparse import csr_matrix
@@ -25,6 +26,7 @@ class WineDatasetManager:
         self.y_label = y_label
         self.folds = None
         self.vectorizer = None
+        self.scaler = None
 
     @classmethod
     def read_csv(cls, csv_path: str, x_label: str = 'description', y_label: str = 'variety'):
@@ -102,6 +104,19 @@ class WineDatasetManager:
             self.vectorizer = TfidfVectorizer(strip_accents='ascii')
             self.X = self.vectorizer.fit_transform(self.X)
         return self.vectorizer
+    
+    def normalize(self, scaler : StandardScaler = None):
+        """
+        Normalizza le caratteristiche.
+        Da usare se y è numerico [prezzo].
+        """
+        if scaler is None:
+            self.scaler = StandardScaler()
+            self.y = pd.Series(self.scaler.fit_transform(self.y.values.reshape(-1, 1)).flatten(), index=self.y.index)
+        else:
+            self.scaler = scaler
+            self.y = pd.Series(self.scaler.fit_transform(self.y.values.reshape(-1, 1)).flatten(), index=self.y.index)
+        return self.scaler
 
     def resample(self, max_samples : int = 200000):
         """

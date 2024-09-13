@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
 import pandas as pd
 
 from vinum_analytica.data.dataset import WineDatasetManager # type: ignore
@@ -113,3 +114,44 @@ class Plotter:
         # Mostrare il grafico
         plt.show()
 
+    def plot_regressor_comparison(self, y, y_tree_pred, y_neural_pred):
+        """
+        Crea un grafico a dispersione per confrontare le predizioni del Tree Model e del Neural Network con i valori reali,
+        utilizzando seaborn per la visualizzazione.
+        
+        Parameters:
+            y (array-like): Valori reali.
+            y_tree_pred (array-like): Predizioni del modello ad albero.
+            y_neural_pred (array-like): Predizioni del modello di rete neurale.
+        """
+
+        y = np.array(y).ravel()
+        y_tree_pred = np.array(y_tree_pred).ravel()
+        y_neural_pred = np.array(y_neural_pred).ravel()
+
+        plt.figure(figsize=(10, 10))
+
+        # Creazione di un DataFrame per facilitare il plotting con seaborn
+        data = pd.DataFrame({
+            'Actual Price': y,
+            'Tree Model Prediction': y_tree_pred,
+            'Neural Network Prediction': y_neural_pred
+        })
+
+        # Scatter plot per le predizioni del modello ad albero
+        sns.scatterplot(x='Actual Price', y='Tree Model Prediction', data=data, label='Tree Model')
+
+        # Scatter plot per le predizioni del modello di rete neurale
+        sns.scatterplot(x='Actual Price', y='Neural Network Prediction', data=data, label='Neural Network Model')
+
+        plt.xlabel('Actual Price')
+        plt.ylabel('Predicted Price')
+        plt.title('Model Predictions vs Actual')
+        plt.legend()
+
+        # Set the limits for x and y axis to be the same
+        max_value = max(y)
+        plt.xlim(0, max_value)
+        plt.ylim(0, max_value)
+
+        plt.show()

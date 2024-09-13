@@ -12,28 +12,32 @@ considered:
 
 \subsection{Imbalanced Dataset}
 To overcome the class imbalance in the dataset, 
-the training set was oversampled using the SMOTE 
-technique. The number of records was limited to 
-200,000 to control computational time and resources. 
-SMOTE generates synthetic samples for the minority 
+a combination of SMOTE oversampling and random 
+undersampling was applied to achieve a balanced dataset. 
+The number of records was limited to 200,000 to 
+control computational time and resources. 
+SMOTE generated synthetic samples for the minority 
 classes by interpolating between existing samples, 
-which helps to balance the class distribution without 
-duplicating data. This approach improves the model's 
-ability to generalize, especially for underrepresented 
+while random undersampling reduced the number of 
+majority class samples, helping to balance the 
+class distribution without simply duplicating data. 
+This approach improved the model’s ability to 
+generalize, particularly for underrepresented 
 classes, while reducing the risk of overfitting. 
-In addition to SMOTE, class weights were assigned 
-to further address the imbalance during training, 
-ensuring that minority classes had adequate influence 
-on the model’s learning process. 
+In addition to this balancing strategy, class 
+weights were assigned to further address the 
+imbalance during training, ensuring that minority 
+classes had adequate influence on the model’s 
+learning process.
 
 \subsection{Model Selection}
 To identify the optimal hyperparameter settings for 
 each model, we performed a random search by exploring 
-8 randomly selected hyperparameter combinations for 
+10 randomly selected hyperparameter combinations for 
 each model (Decision Trees, Random Forests, and 
 Neural Networks). Each combination was evaluated 
 using 6-fold cross-validation on the training set. 
-The hyperparameter search spaces for the first phase 
+The hyperparameter search spaces 
 are outlined in \autoref{tab:dt_search_space}, 
 \autoref{tab:rf_search_space}, and 
 \autoref{tab:nn_search_space}.

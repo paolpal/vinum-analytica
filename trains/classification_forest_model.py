@@ -8,18 +8,18 @@ logging.basicConfig(level=logging.INFO)
 # Carica il dataset
 logging.info('Loading dataset...')
 dataset = WineDatasetManager()
-dataset.load('./data/processed/train.csv')
+dataset.load('./data/processed/train_classification.csv')
 logging.info('done')
 
 train = dataset
 vec = train.vectorize()
-train.oversample()
+train.resample()
 
 hyperparams = {
-            "n_estimators": 100,
+            "n_estimators": 150,
             "criterion": "gini",
             "min_impurity_decrease": 0.0,
-            "max_depth": 1000
+            "max_depth": 150
         }
 
 model = RandomForestModel(vectorizer=vec, **hyperparams)

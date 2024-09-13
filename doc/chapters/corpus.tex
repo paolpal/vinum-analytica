@@ -22,7 +22,7 @@ with some being more common than others.
 \begin{figure*}
     \centering
     \includegraphics[width=0.8\textwidth]{images/bar_plot_variety_reviews_distribution.png}
-    \caption{Most represented grapes varieties in the dataset}
+    \caption{Grapes varieties distribution in the dataset}
     \label{fig:grape_variety_distribution}
 \end{figure*}
 
@@ -36,30 +36,30 @@ single variety. Their exclusion was motivated by the
 desire to analyze specific and well-defined grape 
 varieties, avoiding the ambiguity introduced by blends.
 
-Additionally, a minimum representation threshold was 
-applied to the remaining varieties, ensuring that only 
-those with an adequate number of reviews were included 
-in the analysis. This approach allowed for a dataset 
-focused on clearly identified and sufficiently 
-represented wine varieties, facilitating a more 
-accurate and meaningful analysis. The selection helped 
-avoid distortions due to inadequate representation and 
-ensured that the results obtained are based on robust 
-and representative data.
+Additionally, duplicates were removed from the dataset, 
+and then a minimum representation threshold was applied 
+to the remaining varieties, ensuring that only those 
+with a sufficient number of reviews were included. 
+This process led to a focused selection of 
+well-defined and adequately represented wine varieties, 
+enabling a more accurate and meaningful analysis. 
+By first eliminating duplicates and then excluding 
+underrepresented varieties, we avoided distortions and 
+ensured that the results were based on robust and 
+representative data.
 
 As a result of this selection process, the dataset now 
-includes \textbf{29} distinct grape varieties, namely 
-\textit{Portuguese Red}, \textit{Pinot Gris}, \textit{Riesling}, 
-\textit{Pinot Noir}, \textit{Gewürztraminer}, \textit{Cabernet Sauvignon}, 
-\textit{Chardonnay}, \textit{Malbec}, \textit{Merlot}, \textit{Gamay}, 
-\textit{Sauvignon Blanc}, \textit{Sangiovese}, \textit{Cabernet Franc}, 
-\textit{Petite Sirah}, \textit{Rosé}, \textit{Zinfandel}, 
-\textit{Grüner Veltliner}, \textit{Viognier}, \textit{Syrah}, 
-\textit{Nebbiolo}, \textit{Barbera}, \textit{Portuguese White}, 
-\textit{Sangiovese Grosso}, \textit{Shiraz}, \textit{Grenache}, 
-\textit{Pinot Grigio}, \textit{Tempranillo}, \textit{Glera}, 
-and \textit{Port}. 
-After filtering, the cleaned dataset comprises \textbf{85,117} reviews, 
+includes \textbf{27} distinct grape varieties, namely 
+\textit{Barbera}, \textit{Cabernet Franc}, \textit{Cabernet Sauvignon}, 
+\textit{Chardonnay}, \textit{Gamay}, \textit{Gewürztraminer}, 
+\textit{Glera}, \textit{Grenache}, \textit{Grüner Veltliner}, 
+\textit{Malbec}, \textit{Merlot}, \textit{Nebbiolo}, 
+\textit{Petite Sirah}, \textit{Pinot Grigio}, \textit{Pinot Gris}, 
+\textit{Pinot Noir}, \textit{Port}, \textit{Riesling}, 
+\textit{Rosé}, \textit{Sangiovese}, \textit{Sangiovese Grosso}, 
+\textit{Sauvignon Blanc}, \textit{Shiraz}, \textit{Syrah}, 
+\textit{Tempranillo}, \textit{Viognier}, \textit{Zinfandel}. 
+After filtering, the cleaned dataset comprises \textbf{75,229} reviews, 
 providing a well-defined and comprehensive basis for further analysis.
 
 \subsection{Contamination Removal}

@@ -5,9 +5,9 @@
         \toprule
         \textbf{Hyperparameter} & \textbf{Values} \\
         \midrule
-        Criterion & gini, entropy, log\_loss \\
-        Min Impurity Decrease & 0.0, 1e-4, 1e-8, 1e-12 \\
-        Max Depth & None, 1000 \\
+        Criterion & gini, log\_loss \\
+        Min Impurity Decrease & 0.0, 1e-8, 1e-10, 1e-12 \\
+        Max Depth & 150, 200, None \\
         \bottomrule
     \end{tabular}
     \label{tab:dt_search_space}
@@ -21,9 +21,9 @@
         \textbf{Hyperparameter} & \textbf{Values} \\
         \midrule
         Number of Estimators & 50, 100, 150 \\
-        Criterion & gini, entropy, log\_loss \\
-        Min Impurity Decrease & 0.0, 1e-4, 1e-8, 1e-12 \\
-        Max Depth & None, 1000 \\
+        Criterion & gini, log\_loss \\
+        Min Impurity Decrease & 0.0, 1e-8, 1e-10, 1e-12 \\
+        Max Depth & 150, 200, None \\
         \bottomrule
     \end{tabular}
     \label{tab:rf_search_space}
@@ -37,8 +37,8 @@
         \textbf{Hyperparameter} & \textbf{Values} \\
         \midrule
         Hidden Size & 16, 32, 64 \\
-        Epochs & 5, 10, 15 \\
-        Learning Rate & 0.005, 0.001, 0.01 \\
+        Epochs & 6, 8, 10 \\
+        Learning Rate & 0.005, 0.001, 0.0005 \\
         \bottomrule
     \end{tabular}
     \label{tab:nn_search_space}

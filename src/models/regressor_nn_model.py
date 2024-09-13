@@ -2,16 +2,15 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import numpy as np
-import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import StandardScaler
 from tqdm import tqdm
 
 from ..data.dataset import WineDatasetManager
 from .model import Model
 
 class RegressorNeuralNetworkModel(Model):
-    def __init__(self, input_size: int, vectorizer: TfidfVectorizer=None, epochs: int = 10, lr: float = 0.001):
+    def __init__(self, input_size: int, vectorizer: TfidfVectorizer=None, scaler: StandardScaler=None, epochs: int = 10, lr: float = 0.001):
         """
         Inizializza la rete neurale con un livello nascosto e specifica il numero di neuroni per ogni livello.
         
@@ -40,6 +39,7 @@ class RegressorNeuralNetworkModel(Model):
         self.criterion = nn.MSELoss()  # Funzione di perdita per regressione
         self.optimizer = optim.Adam(self.model.parameters(), lr=lr)  # Ottimizzatore Adam
         self.vectorizer = vectorizer
+        self.scaler = scaler
         self.hyperparameters = {
             'input_size': input_size,
             'epochs': epochs,
@@ -92,16 +92,47 @@ class RegressorNeuralNetworkModel(Model):
             outputs = self.model(x)
             return outputs.cpu().numpy()
         
-    def save(self, path: str):
-        with open(path, 'wb') as file:
-            pickle.dump((self.model.state_dict(), self.vectorizer, self.hyperparameters), file)
-
+    def save(self, path):
+        """
+        Salva il modello su disco.
+        
+        Parameters:
+            path (str): Il percorso del file in cui salvare il modello.
+        """
+        torch.save({
+            'state_dict': self.model.state_dict(),
+            'vectorizer': self.vectorizer,
+            'scaler': self.scaler,
+            'hyperparameters': self.hyperparameters
+        }, path)
     
     @classmethod
     def load(cls, path: str) -> 'RegressorNeuralNetworkModel':
-        with open(path, 'rb') as file:
-            state_dict, vectorizer, hyperparameters = pickle.load(file)
-            regressor = cls(**hyperparameters, vectorizer=vectorizer)
-            regressor.model.load_state_dict(state_dict)
-        return regressor
+        """
+        Carica un modello precedentemente salvato da un file.
+        
+        Parameters:
+            path (str): Il percorso del file da cui caricare il modello.
+        """
+        device = torch.device(
+            'cuda' if torch.cuda.is_available() 
+            else 'mps' if torch.backends.mps.is_available()
+            else 'cpu'
+        )
+
+        # Caricare tutto con torch.load e mappare su CPU o GPU
+        checkpoint = torch.load(path, map_location=device)
+
+        hyperparameters = checkpoint['hyperparameters']
+        vectorizer = checkpoint['vectorizer']
+        scaler = checkpoint['scaler']
+        nn = cls(**hyperparameters, vectorizer=vectorizer, scaler=scaler)
+        # Caricare lo stato del modello
+        nn.model.load_state_dict(checkpoint['state_dict'])
+        nn.model.to(device)
+        
+        # Ripristinare altri attributi
+        nn.device = device  # Salva il dispositivo per futuri usi
+
+        return nn
     

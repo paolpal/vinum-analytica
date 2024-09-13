@@ -8,7 +8,7 @@ dataset = WineDatasetManager(y_label='price')
 dataset.load('./data/processed/test_regression.csv')
 print('done')
 
-model = RegressorNeuralNetworkModel.load('./models/regressor_neural_network_model.pkl')
+model = RegressorNeuralNetworkModel.load('./models/regressor_nn_model.pkl')
 
 # Valuta il modello
 print('Evaluating model...', end='')
