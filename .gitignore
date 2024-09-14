@@ -107,12 +107,7 @@ logs/
 *.pyc
 
 # Ignore dataset files
-*.csv
-
-# Ignore image files
-*.jpg
-*.jpeg
-*.png
+data/raw
 
 # ignore JSON
 *.json
