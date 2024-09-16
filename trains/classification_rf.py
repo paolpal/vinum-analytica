@@ -1,6 +1,6 @@
 from vinum_analytica.data import WineDatasetManager # type: ignore
-from vinum_analytica.models import NeuralNetworkModel # type: ignore
-
+from vinum_analytica.models import RandomForestModel # type: ignore
+import json
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -15,22 +15,22 @@ train = dataset
 vec = train.vectorize()
 train.resample()
 
-hyperparams = {
-            "hidden_size": 64,
-            "epochs": 8,
-            "lr": 0.0005
-        }
+with open('./results/best.json', 'r') as f:
+    best = json.load(f)
 
+best_forest = next((model for model in best if model['model_name'] == 'rf'), None)
+if best_forest:
+    hyperparams = best_forest['hyperparams']
+else:
+    logging.warning('No best model found with model_name "dt"')
+    exit()
 
-model = NeuralNetworkModel(
-    input_size=vec.get_feature_names_out().shape[0],
-    output_size=len(train.classes()),
-    vectorizer=vec, **hyperparams)
+model = RandomForestModel(vectorizer=vec, **hyperparams)
 
 logging.info('Training model...')
 model.train(train)
 logging.info('done')
 
 logging.info('Saving model...')
-model.save('./models/nn_model.pkl')
+model.save('./models/random_forest_model.pkl')
 logging.info('done')

@@ -1,6 +1,6 @@
 from vinum_analytica.data import WineDatasetManager # type: ignore
 from vinum_analytica.models import TreeModel # type: ignore
-
+import json
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -15,11 +15,15 @@ train = dataset
 vec = train.vectorize()
 train.resample()
 
-hyperparams = {
-            "criterion": "gini",
-            "min_impurity_decrease": 1e-08,
-            "max_depth": 200
-        }
+with open('./results/best.json', 'r') as f:
+    best = json.load(f)
+
+best_tree = next((model for model in best if model['model_name'] == 'dt'), None)
+if best_tree:
+    hyperparams = best_tree['hyperparams']
+else:
+    logging.warning('No best model found with model_name "dt"')
+    exit()
 
 model = TreeModel(vectorizer=vec, **hyperparams)
 

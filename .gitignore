@@ -108,7 +108,3 @@ logs/
 
 # Ignore dataset files
 data/raw
-
-# ignore JSON
-*.json
-
