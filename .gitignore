@@ -108,3 +108,6 @@ logs/
 
 # Ignore dataset files
 data/raw
+
+# Ignore macOS system files
+.DS_Store
